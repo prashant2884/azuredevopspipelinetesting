@@ -10,21 +10,27 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-
 jobs:
 
+  # ==================================================
+  # TERRAFORM CI/CD
+  # ==================================================
   terraform:
+
     name: Terraform CI/CD
+
     runs-on: ubuntu-latest
-    
-      # TERRAFORM DIRECTORY
-  
+
+    # ==================================================
+    # TERRAFORM DIRECTORY
+    # ==================================================
     defaults:
       run:
-        working-directory: ./Environment/dev
+        working-directory: ./environment/dev
 
+    # ==================================================
+    # AZURE CREDENTIALS
+    # ==================================================
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -33,31 +39,58 @@ jobs:
 
     steps:
 
-      # ---------------- CHECKOUT ----------------
+      # ==================================================
+      # 1. CHECKOUT CODE
+      # ==================================================
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # ---------------- TERRAFORM SETUP ----------------
+
+      # ==================================================
+      # 2. SETUP TERRAFORM
+      # ==================================================
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # ---------------- FORMAT ----------------
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
 
-      # ---------------- INIT ----------------
+      # ==================================================
+      # 3. TERRAFORM VERSION
+      # ==================================================
+      - name: Terraform Version
+        run: terraform version
+
+
+      # ==================================================
+      # 4. TERRAFORM INIT
+      # ==================================================
       - name: Terraform Init
         run: terraform init
 
-      # ---------------- VALIDATE ----------------
+
+      # ==================================================
+      # 5. TERRAFORM FORMAT CHECK
+      # ==================================================
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+
+      # ==================================================
+      # 6. TERRAFORM VALIDATE
+      # ==================================================
       - name: Terraform Validate
         run: terraform validate
 
-      # ---------------- PLAN ----------------
+
+      # ==================================================
+      # 7. TERRAFORM PLAN
+      # ==================================================
       - name: Terraform Plan
         run: terraform plan
 
-      # ---------------- APPLY ----------------
+
+      # ==================================================
+      # 8. TERRAFORM APPLY
+      # ==================================================
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
