@@ -19,6 +19,13 @@ jobs:
     name: Terraform CI/CD
     runs-on: ubuntu-latest
 
+      # ==================================================
+    # TERRAFORM DIRECTORY
+    # ==================================================
+    defaults:
+      run:
+        working-directory: ./Environment/dev
+
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
