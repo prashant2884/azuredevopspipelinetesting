@@ -18,10 +18,9 @@ jobs:
   terraform:
     name: Terraform CI/CD
     runs-on: ubuntu-latest
-
-      # ==================================================
-    # TERRAFORM DIRECTORY
-    # ==================================================
+    
+      # TERRAFORM DIRECTORY
+  
     defaults:
       run:
         working-directory: ./Environment/dev
